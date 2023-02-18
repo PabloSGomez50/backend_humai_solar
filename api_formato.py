@@ -1,5 +1,3 @@
-# import pandas as pd
-
 # TIMEZONE = 'America/Argentina/Buenos_Aires'
 COLORS = ['#80558C', '#E4D192', '#6096B4', 
           '#BFDB38', '#FC7300', '#FCF9BE',
@@ -87,5 +85,7 @@ def format_clima(df) -> list:
         'Humidity': 'humedad',
         'Barometer': 'presion'
     })
-    
+
+    df['icon'] = df['clima'].apply(lambda x: 'clouds' in x)
+
     return df.to_dict(orient='records')

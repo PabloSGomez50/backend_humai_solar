@@ -1,0 +1,5 @@
+Datetime,Temp,Weather,Wind,Humidity,Barometer
+2013-02-15 12:00:00,23,Broken clouds,17,74,1021
+2013-02-16 12:00:00,22,Scattered showers. Broken clouds,17,83,1022
+2013-02-17 12:00:00,24,Scattered clouds,17,47,1022
+2013-02-18 12:00:00,26,Scattered clouds,13,48,1019

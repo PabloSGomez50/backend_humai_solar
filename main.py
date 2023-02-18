@@ -89,7 +89,6 @@ def resumen():
 
 @app.get('/clima')
 def show_clima():
-    SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 
     today = datetime.today()
     df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day), parse_dates=['Datetime'])
