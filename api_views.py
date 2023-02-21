@@ -39,17 +39,11 @@ def data_now(df: pd.DataFrame) -> pd.DataFrame:
     Input: user_id -> int
     Output: response -> DataFrame
     """
-    # Trae el dia de 2012/2013
-    # now = datetime.now() - timedelta(days=DAYS_DIFF)
-    # delay = now - timedelta(minutes=55)
-
-    # lower = delay.strftime('%Y-%m-%d %H:%M')
-    # upper = now.strftime('%Y-%m-%d %H:%M')
 
     df = df[df['Datetime'].between(*get_datetimes(minutes=55))]
-    df_ = df.tail(1)
+    # df_ = df.tail(1)
 
-    return df_
+    return df.tail(1).copy()
 
 
 
@@ -83,9 +77,8 @@ def prod_last_7(df: pd.DataFrame) -> pd.DataFrame:
     Input: user_id -> int
     Output: df -> 'Datetime' | 'total'
     """
-
-    t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    
+    df = df[df['Datetime'].between(*get_datetimes())].copy()
 
     df1 = df.resample('1D', on='Datetime').sum()
     # total = round(df1['Produccion'].sum(), 3)
@@ -93,6 +86,7 @@ def prod_last_7(df: pd.DataFrame) -> pd.DataFrame:
     df1['Datetime'] = df1.index.dayofweek.astype(int)
     
     return df1
+
 
 def prod_month(df: pd.DataFrame) -> pd.DataFrame:
 
@@ -174,10 +168,10 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
         days = 0
         months = 0
 
-    t_min, t_max = get_datetimes(days=days, months=months)
+    # t_min, t_max = get_datetimes(days=days, months=months)
     
     # Filtrar un par de meses
-    df = df[df['Datetime'].between(t_min, t_max)]
+    df = df[df['Datetime'].between(*get_datetimes(days=days, months=months))]
 
     df = df.resample(sample, on='Datetime').sum()
 
@@ -198,6 +192,7 @@ def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
         'Total': 'Consumo Total'
         }
 
+    df_final['Diferencia'] = df_final['Produccion'] - df_final['Total']
     df_final = df_final.round(decimals=3)
     df_final['Fecha'] = df_final.index.strftime('%Y-%m-%d')
     df_final.reset_index(drop=True, inplace=True)

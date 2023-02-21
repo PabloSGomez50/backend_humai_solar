@@ -25,6 +25,7 @@ origins = [
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
+
 def get_prod(user_id: int) -> pd.DataFrame:
     """
     Obtener el dataframe a partir del csv del usuario
@@ -143,25 +144,39 @@ def calendario(year: int):
     return response
 
 
-@app.get('/line/{span}/{sample}')
-def historia(span: str ='1M', sample: str ='1D'):
+@app.get('/line/{tipo}/{span}/{sample}')
+def historia(tipo: bool = True, span: str ='1M', sample: str ='1D', telegram: bool = False):
 
-    df = get_prod(CUSTOMER_ID)
+
+    if tipo:
+        df = get_prod(CUSTOMER_ID)
+        print('Usa prod')
+    else:
+        df = get_consumo(CUSTOMER_ID)
+        print('Usa CONSUMO')
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
     if sample.endswith('W'):
-        response = api_formato.format_linea_hist(df_response, index='%m-%d', group='%Y')
+        index = '%m-%d'
+        group='%Y'
 
     elif sample.endswith('D'):
-        response = api_formato.format_linea_hist(df_response, index='%d', group='%m')
+        index='%d'
+        group='%m'
         
     elif sample.endswith('H'):
-        response = api_formato.format_linea_hist(df_response, index='%d %H:%M', group='%m')
+        index='%d'
+        group='%m'
 
     else:
-        response = api_formato.format_linea_hist(df_response, index='%H:%M', group='%d')
+        index='%H:%M'
+        group='%d'
 
-    return response
+    if telegram:
+        return api_formato.format_linea_telegram(df_response, index, group, tipo)
+    
+    else:
+        return api_formato.format_linea_hist(df_response, index, group, tipo)
 
 
 @app.get('/table')
