@@ -240,9 +240,10 @@ def prediccion(user_id: int=CUSTOMER_ID):
     df_response = api_views.get_prediccion(df)
 
     data = list(df_response['Produccion'])
-    print(data[:12])
+    data = data[:12]
+    print(len(data), data)
 
     predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
     print(predicciones)
 
-    return data[:12]
+    return data
