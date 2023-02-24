@@ -27,6 +27,7 @@ def hacer_predicciones(valores_entrada, cantidad_predicciones):
         # Actualiza los valores de entrada con la nueva predicción
         valores_entrada = np.delete(valores_entrada, 0)
         valores_entrada = np.append(valores_entrada, prediccion)
+        
     return predicciones
 
 if __name__ == '__main__':
